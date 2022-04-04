@@ -69,9 +69,7 @@ void setup()
 
   //CCS811
   if (!ccs.begin())
-  {
-//    Serial.println("Failed to start sensor! Please check your wiring. CCS811");
-  }
+   }
 
   //SGP30
   if (!sgp.begin())
@@ -143,18 +141,7 @@ void loop()
   }
 
   /////////////////////////////////////////////////////////////////////////////////
-  //SGP30
-  //if (! sgp.IAQmeasure())
-  //{ delay(5000);
-  //  Serial.println("Measurement failed. SGP30");
-  //  return;
 
-  // }
-  // if (! sgp.IAQmeasureRaw())
-  // { delay(5000);
-  //   Serial.println("Raw Measurement failed. SGP30");
-  //   return;
-  //  }
 
   if (sgp.IAQmeasure()) {
 
