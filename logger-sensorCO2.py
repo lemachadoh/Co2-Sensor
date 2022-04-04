@@ -1,3 +1,5 @@
+//logger dos dados obtidos através do arduino
+
 from datetime import datetime
 from time import time
 import serial
