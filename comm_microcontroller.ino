@@ -1,3 +1,7 @@
+////////////////////////////////////////////////////////////////////////////////////////////
+//inclusão das bibliotecas dos sensores + comunicação
+////////////////////////////////////////////////////////////////////////////////////////////
+
 #include <Wire.h>
 #include "SparkFun_SCD30_Arduino_Library.h"
 #include "SparkFun_SCD4x_Arduino_Library.h"
@@ -10,7 +14,7 @@
 #include <pas-co2-serial-ino.hpp>
 
 /////////////////////////////////////////////////////////////////////////////////////////////
-// Quem liga onde:
+// Intruções de ligação no hardware:
 // Alimentação 3.3V  -> CCS811 e PAS CO2
 // Alimentação 5.0V  -> SCD 30, SCD 41 e SGP 30
 // Alimentação 12.0V -> PAS CO2 com terra comum a todos (saida vermelha vai no 12V e saida preta da fonte vai no GND da plaquinha, tds os nomes estão nos fios embaixo).
@@ -18,6 +22,8 @@
 // 1 Barramento p/ SDA pra todos
 // 1 Barramento Terra/GND pra todos
 /////////////////////////////////////////////////////////////////////////////////////////////
+
+// chamando funções
 
 SCD30 airSensor;              //SCD30
 SCD4x mySensor;               //SCD41
@@ -27,11 +33,11 @@ Adafruit_SGP30 sgp;           //SGP30
 #define I2C_FREQ_HZ 400000    // PASCO2
 PASCO2SerialIno cotwo;        //PASCO2
 
-int16_t co2ppm; //PASCO2
-Error_t err; //PASCO2
+int16_t co2ppm;               //PASCO2
+Error_t err;                  //PASCO2
 
 
-//SGP30
+//SGP30 código base fornecido pela fabricante (SENSIRION) 
 uint32_t getAbsoluteHumidity(float temperature, float humidity)
 {
   // approximation formula from Sensirion SGP30 Driver Integration chapter 3.15
@@ -50,7 +56,7 @@ void setup()
 {
   delay(10000);
 
-  //SCD30
+  //SCD30 código base de comunicação fornecido pela fabricante (SENSIRION) 
   Wire.beginTransmission(97);
   Serial.begin(115200);
   Wire.begin();
@@ -61,17 +67,19 @@ void setup()
     flag = false;
   }
 
-  //SCD41
+  //SCD41 Código base de comunicação fornecido pela fabricante (SENSIRION)
   if (mySensor.begin() == false)
   {
     Serial.println(F("Failed to start sensor! Please check your wiring. SCD41"));
   }
 
-  //CCS811
+  //CCS811 Código base de comunicação fornecido pela fabricante (DF.ROBOT)
   if (!ccs.begin())
+  {
+    Serial.println(F("Failed to start sensor! Please check your wiring. CCS811"));
    }
 
-  //SGP30
+  //SGP30 Código base de comunicação fornecido pela fabricante (MK5)
   if (!sgp.begin())
   {
     Serial.println("Failed to start sensor! Please check your wiring. SGP30");
@@ -82,7 +90,7 @@ void setup()
   Wire.begin(40);
   Wire.setClock(I2C_FREQ_HZ);
 
-  // PASCO2
+  // PASCO2 Código base de comunicação fornecido pela fabricante (INFINEON)
   err = cotwo.begin();
   if (XENSIV_PASCO2_OK != err)
   {
@@ -96,6 +104,8 @@ void setup()
 }
 
 void loop()
+   ///////
+   //Leitura e print dos dados lidos pelos sensores
 {
   /////////////////////////////////////////////////////////////////////////////////
   //SCD30
